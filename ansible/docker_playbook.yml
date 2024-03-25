@@ -1,0 +1,27 @@
+---
+- hosts: servers
+  remote_user: ubuntu
+
+  vars:
+    release_path: /home/ubuntu/docker
+    repositiry: https://gitlab.skillbox.ru/aleksei_koptev/service.git
+    version: skillbox/app
+
+  tasks:
+#install skillbox-dockers        
+    - name: Clone the repository
+      git:
+        repo: "{{ repositiry }}"
+        dest: "{{ release_path }}"
+    
+#    - name: run tests
+#      command: "{{ release_path }}/run-tests.sh"
+    
+    - name: Build the image
+      docker_image:
+        name: "{{ version }}"
+        path: "{{ release_path }}"
+        state: present
+    
+    - name: run the image
+      command: docker run -p8080:8080 "{{ version }}"
