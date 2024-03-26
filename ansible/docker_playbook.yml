@@ -5,7 +5,8 @@
   vars:
     release_path: /home/ubuntu/docker
     repositiry: https://gitlab.skillbox.ru/aleksei_koptev/service.git
-    version: skillbox/app
+    name_image: skillbox/app
+    version: latest
 
   tasks:
 #install skillbox-dockers        
@@ -13,15 +14,31 @@
       git:
         repo: "{{ repositiry }}"
         dest: "{{ release_path }}"
-    
-#    - name: run tests
-#      command: "{{ release_path }}/run-tests.sh"
+      ignore_errors: true
     
     - name: Build the image
       docker_image:
-        name: "{{ version }}"
-        path: "{{ release_path }}"
+        name: "{{ name_image }}"
+        build:
+          path: "{{ release_path }}"
         state: present
+        source: build
+        tag: "{{ version }}" 
     
     - name: run the image
-      command: docker run -p8080:8080 "{{ version }}"
+      docker_container:
+        name: skillbox-app
+        image: "{{ name_image }}"
+        state: started
+        ports: 8080:8080        
+
+#launch unit-file
+    - name: copy unit
+      ansible.builtin.copy:
+        src: ./file/start-docker.service
+        dest: /etc/systemd/system/start-docker.service
+
+    - name: Enabled service
+      ansible.builtin.service:
+        name: start-docker
+        enabled: yes
