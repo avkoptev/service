@@ -1,0 +1,40 @@
+stages:          
+  - build
+  - test
+  - deploy
+
+build-docker:
+  stage: build
+  image: docker:stable
+  only:
+    - master    
+    - uat
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u Deployer -p ${ACCESS_TOKEN} ci.warspoon.ru
+  script:
+    - docker build -t skillbox/app
+    - docker tag skillbox/app:${CI_COMMIT_SHORT_SHA}
+    - docker push skillbox/app:${CI_COMMIT_SHORT_SHA}
+
+test:
+  stage: test       
+  script:
+    - sh run-tests.sh
+
+copy_docker_images:
+  extends: deploy    
+  before_script:
+    - docker login -u Deployer -p ${ACCESS_TOKEN} ci.warspoon.ru
+  script:
+    - docker pull skillbox/app:${CI_COMMIT_SHORT_SHA}    
+
+deploy:      
+  stage: deploy
+  only:
+    - master
+    - uat  
+  when: always
+  script:
+    - ansible-playbook -b docker_playbook.yml
