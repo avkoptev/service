@@ -16,9 +16,7 @@ before_script:
   - docker-compose --version
 
 buildJob:
-  stage: build
-  tags:
-    - docker
+  stage: build  
   script:
     - docker-compose build
 
