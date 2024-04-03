@@ -16,8 +16,6 @@ build:
     - docker:24.0.5-dind
   before_script:
     - docker info
-  tags:
-    - docker
   script:
     - docker build -t skillbox/app:${CI_COMMIT_SHORT_SHA} .
 
