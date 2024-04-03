@@ -37,7 +37,9 @@ build:
  #   - docker push skillbox/app:${CI_COMMIT_SHORT_SHA}
 
 test:
-  stage: test       
+  stage: test
+  tags:
+    - shell       
   script:
     - sh run-tests.sh   
 
@@ -45,7 +47,9 @@ deploy:
   stage: deploy
   only:
     - main
-    - uat  
+    - uat
+  tags:
+    - shell   
   when: always
   script:
 #    - docker pull skillbox/app:${CI_COMMIT_SHORT_SHA} 
