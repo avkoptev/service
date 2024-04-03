@@ -5,17 +5,17 @@ stages:
 
 #before_script:
 #  - docker login -u Deployer -p ${ACCESS_TOKEN} gitlab.skillbox.ru/aleksei_koptev/ #ci.warspoon.ru  
+default:
+    image: docker:24.0.5
+    services:
+      - docker:24.0.5-dind
 
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
 
 build:
   stage: build
-  image: docker:24.0.5
-  services:
-    - docker:24.0.5-dind
-  before_script:
-    - docker info
+
   tags:
     - docker
   script:
