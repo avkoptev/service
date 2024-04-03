@@ -3,6 +3,9 @@ stages:
   - test
   - deploy
 
+before_script:
+  - docker login -u Deployer -p ${ACCESS_TOKEN} ci.warspoon.ru  
+
 build-docker:
   stage: build
   image: docker:stable
@@ -11,8 +14,6 @@ build-docker:
     - uat
   services:
     - docker:dind
-  before_script:
-    - docker login -u Deployer -p ${ACCESS_TOKEN} ci.warspoon.ru
   script:
     - docker build -t skillbox/app
     - docker tag skillbox/app:${CI_COMMIT_SHORT_SHA}
@@ -24,9 +25,7 @@ test:
     - sh run-tests.sh
 
 copy_docker_images:
-  extends: deploy    
-  before_script:
-    - docker login -u Deployer -p ${ACCESS_TOKEN} ci.warspoon.ru
+  extends: deploy
   script:
     - docker pull skillbox/app:${CI_COMMIT_SHORT_SHA}    
 
