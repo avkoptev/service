@@ -12,8 +12,8 @@ build-docker:
   only:
     - main    
     - uat
-  services:
-    - docker:dind
+ # services:
+ #   - docker:dind
   script:
     - docker build . -t skillbox/app:${CI_COMMIT_SHORT_SHA}
  #  - docker tag skillbox/app:${CI_COMMIT_SHORT_SHA}
