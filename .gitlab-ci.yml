@@ -4,7 +4,7 @@ stages:
   - deploy
 
 before_script:
-  - docker login -u Deployer -p ${ACCESS_TOKEN} https://gitlab.skillbox.ru/aleksei_koptev/service #ci.warspoon.ru  
+  - docker login -u Deployer -p ${ACCESS_TOKEN} gitlab.skillbox.ru/aleksei_koptev/ #ci.warspoon.ru  
 
 build-docker:
   stage: build
