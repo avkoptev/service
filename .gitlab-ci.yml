@@ -4,7 +4,7 @@ stages:
   - deploy
 
 before_script:
-  - docker login -u Deployer -p ${ACCESS_TOKEN} ci.warspoon.ru  
+  - docker login -u Deployer -p ${ACCESS_TOKEN} https://gitlab.skillbox.ru/aleksei_koptev/service #ci.warspoon.ru  
 
 build-docker:
   stage: build
@@ -22,12 +22,7 @@ build-docker:
 test:
   stage: test       
   script:
-    - sh run-tests.sh
-
-copy_docker_images:
-  extends: deploy
-  script:
-    - docker pull skillbox/app:${CI_COMMIT_SHORT_SHA}    
+    - sh run-tests.sh   
 
 deploy:      
   stage: deploy
@@ -36,4 +31,5 @@ deploy:
     - uat  
   when: always
   script:
+    - docker pull skillbox/app:${CI_COMMIT_SHORT_SHA} 
     - ansible-playbook -b docker_playbook.yml
