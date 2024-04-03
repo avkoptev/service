@@ -39,7 +39,7 @@ build:
 test:
   stage: test       
   script:
-    - ./run-tests.sh   
+    - sh run-tests.sh   
 
 deploy:      
   stage: deploy
