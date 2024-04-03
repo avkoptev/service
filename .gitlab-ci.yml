@@ -6,18 +6,34 @@ stages:
 #before_script:
 #  - docker login -u Deployer -p ${ACCESS_TOKEN} gitlab.skillbox.ru/aleksei_koptev/ #ci.warspoon.ru  
 
-build-docker:
+image: docker:latest
+
+services:
+  - docker:dind
+
+before_script:
+  - docker info
+  - docker-compose --version
+
+buildJob:
   stage: build
-  image: docker:stable
-  only:
-    - main    
-    - uat
-  services:
-    - docker:dind
-  variables:
-    DOCKER_HOST: tcp://docker:2375
+  tags:
+    - docker
   script:
-    - docker build . -t skillbox/app:${CI_COMMIT_SHORT_SHA}
+    - docker-compose build
+
+#build-docker:
+#  stage: build
+#  image: docker:stable
+#  only:
+#    - main    
+#    - uat
+#  services:
+#    - docker:dind
+#  variables:
+#    DOCKER_HOST: tcp://docker:2375
+#  script:
+#    - docker build . -t skillbox/app:${CI_COMMIT_SHORT_SHA}
  #  - docker tag skillbox/app:${CI_COMMIT_SHORT_SHA}
  #   - docker push skillbox/app:${CI_COMMIT_SHORT_SHA}
 
