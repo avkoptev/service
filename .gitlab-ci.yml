@@ -12,8 +12,10 @@ build-docker:
   only:
     - main    
     - uat
- # services:
- #   - docker:dind
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
   script:
     - docker build . -t skillbox/app:${CI_COMMIT_SHORT_SHA}
  #  - docker tag skillbox/app:${CI_COMMIT_SHORT_SHA}
