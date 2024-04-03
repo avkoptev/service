@@ -10,7 +10,7 @@ build-docker:
   stage: build
   image: docker:stable
   only:
-    - master    
+    - main    
     - uat
   services:
     - docker:dind
@@ -32,7 +32,7 @@ copy_docker_images:
 deploy:      
   stage: deploy
   only:
-    - master
+    - main
     - uat  
   when: always
   script:
