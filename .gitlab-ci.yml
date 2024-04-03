@@ -49,4 +49,4 @@ deploy:
   when: always
   script:
 #    - docker pull skillbox/app:${CI_COMMIT_SHORT_SHA} 
-    - ansible-playbook -b docker_playbook.yml
+    - ansible-playbook -b ansible/docker_playbook.yml
