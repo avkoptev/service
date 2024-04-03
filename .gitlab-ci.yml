@@ -15,7 +15,7 @@ build-docker:
   services:
     - docker:dind
   script:
-    - docker build -t skillbox/app
+    - docker build . -t skillbox/app
     - docker tag skillbox/app:${CI_COMMIT_SHORT_SHA}
  #   - docker push skillbox/app:${CI_COMMIT_SHORT_SHA}
 
