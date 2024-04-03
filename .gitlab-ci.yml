@@ -47,6 +47,9 @@ deploy:
     - main
     - uat  
   when: always
+  before_script:
+    - ansible --version
+#    - ansible-lint --version
   script:
 #    - docker pull skillbox/app:${CI_COMMIT_SHORT_SHA} 
     - ansible-playbook -b ./ansible/docker_playbook.yml
