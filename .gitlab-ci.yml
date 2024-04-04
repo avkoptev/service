@@ -15,9 +15,6 @@ variables:
 
 build:
   stage: build
-
-  tags:
-    - docker
   script:
     - docker build -t skillbox/app:${CI_COMMIT_SHORT_SHA} .
 
@@ -49,7 +46,10 @@ deploy:
   image: warspoon3000/ansible_image:latest
   before_script:
     - ansible --version
-#    - ansible-lint --version
+    - mkdir secret
+    - echo "$ANSIBLE_SSHKEY" > secret/ansible.key
+    - chmod 400 secret/ansible.key
+    - export ANSIBLE_HOST_KEY_CHECKING=False    
   script:
-#    - docker pull skillbox/app:${CI_COMMIT_SHORT_SHA} 
-    - ansible-playbook -b ./ansible/docker_playbook.yml
+#    - docker pull skillbox/app:${CI_COMMIT_SHORT_SHA}     
+    - ansible-playbook -b --private-key secret/ansible.key --user ubuntu -i ./ansible/hosts ./ansible/docker_playbook.yml
