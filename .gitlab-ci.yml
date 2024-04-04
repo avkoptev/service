@@ -42,11 +42,11 @@ test:
     - sh run-tests.sh   
 
 deploy:      
-  stage: deploy
+  stage: deploy  
   only:
     - main
-    - uat  
-  when: always
+    - uat    
+  image: warspoon3000/ansible_image:latest
   before_script:
     - ansible --version
 #    - ansible-lint --version
