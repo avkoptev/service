@@ -2,9 +2,7 @@ stages:
   - build
   - test
   - deploy
-
-#before_script:
-#  - docker login -u Deployer -p ${ACCESS_TOKEN} gitlab.skillbox.ru/aleksei_koptev/ #ci.warspoon.ru  
+ 
 default:
     image: docker:24.0.5
     services:
@@ -13,10 +11,14 @@ default:
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
 
+before_script:
+  - docker login -u Deployer -p ${ACCESS_TOKEN} gitlab.skillbox.ru/aleksei_koptev/ #ci.warspoon.ru 
+
 build:
   stage: build
   script:
     - docker build -t skillbox/app:${CI_COMMIT_SHORT_SHA} .
+
 
 #build-docker:
 #  stage: build
