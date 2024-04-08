@@ -11,29 +11,16 @@ default:
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
 
-before_script:
-  - docker login -u Deployer -p ${ACCESS_TOKEN} gitlab.skillbox.ru/aleksei_koptev/ #ci.warspoon.ru 
-
 build:
   stage: build
+  before_script:
+#  - docker login registry.ci.warspoon.ru -u Deployer -p ${ACCESS_TOKEN}  
+   - docker login -u warspoon3000 -p ${ACCESS_TOKEN} 
   script:
-    - docker build -t skillbox/app:${CI_COMMIT_SHORT_SHA} .
-
-
-#build-docker:
-#  stage: build
-#  image: docker:stable
-#  only:
-#    - main    
-#    - uat
-#  services:
-#    - docker:dind
-#  variables:
-#    DOCKER_HOST: tcp://docker:2375
-#  script:
-#    - docker build . -t skillbox/app:${CI_COMMIT_SHORT_SHA}
- #  - docker tag skillbox/app:${CI_COMMIT_SHORT_SHA}
- #   - docker push skillbox/app:${CI_COMMIT_SHORT_SHA}
+  #  - docker build -t registry.ci.warspoon.ru/root/test:${CI_COMMIT_SHORT_SHA} .
+  #  - docker push registry.ci.warspoon.ru/root/test:${CI_COMMIT_SHORT_SHA}
+  - docker build -t warspoon3000/skilbox:${CI_COMMIT_SHORT_SHA} .
+  - docker push warspoon3000/skilbox:${CI_COMMIT_SHORT_SHA}
 
 test:
   stage: test       
@@ -51,7 +38,9 @@ deploy:
     - mkdir secret
     - echo "$ANSIBLE_SSHKEY" > secret/ansible.key
     - chmod 400 secret/ansible.key
-    - export ANSIBLE_HOST_KEY_CHECKING=False    
-  script:
-#    - docker pull skillbox/app:${CI_COMMIT_SHORT_SHA}     
+    - export ANSIBLE_HOST_KEY_CHECKING=False 
+    - docker login -u warspoon3000 -p ${ACCESS_TOKEN}    
+  script:    
+#    - docker pull registry.ci.warspoon.ru/root/test:${CI_COMMIT_SHORT_SHA}
+    - docker pull warspoon3000/skilbox:${CI_COMMIT_SHORT_SHA}     
     - ansible-playbook -b --private-key secret/ansible.key --user ubuntu -i ./ansible/hosts ./ansible/docker_playbook.yml
