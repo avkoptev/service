@@ -1,17 +1,19 @@
 ---
-- hosts: servers
-  remote_user: ubuntu
+- hosts: 127.0.0.1  
 
   vars:
-    release_path: /home/ubuntu/docker
-    repositiry: https://gitlab.skillbox.ru/aleksei_koptev/service.git
-    name_image: skillbox/app
-    version: latest
+    docker_hub: hub
+    image_tag: tag
 
-  tasks:   
+  tasks:
+    - name: Pull an image
+      community.docker.docker_image:
+        name: "{{docker_hub}}/skillbox:{{image_tag}}"
+        source: pull
+    
     - name: run the image
       docker_container:
         name: skillbox-app
-        image: "{{ name_image }}"
+        image: "{{docker_hub}}/skillbox:{{image_tag}}"
         state: started
-        ports: 8080:8080        
+        ports: 8080:8080   
