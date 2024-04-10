@@ -24,14 +24,3 @@
         state: present
         source: build
         tag: "{{ version }}" 
-
-#launch unit-file
-    - name: copy unit
-      ansible.builtin.copy:
-        src: ./file/start-docker.service
-        dest: /etc/systemd/system/start-docker.service
-
-    - name: Enabled service
-      ansible.builtin.service:
-        name: start-docker
-        enabled: yes

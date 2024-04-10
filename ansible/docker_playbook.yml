@@ -9,23 +9,23 @@
 
   tasks:
     - name: Docker login
-      docker_login:
+      community.docker.docker_login:
         username: "{{docker_hub}}"
         password: "{{password}}"        
 
     - name: Pull an image
-      docker_image:
+      community.docker.docker_image:
         name: "{{docker_hub}}/skillbox:{{image_tag}}"
         source: pull
 
     - name: Docker unlogin
-      docker_login:        
+      community.docker.docker_login:        
         username: "{{docker_hub}}"
         password: "{{password}}"
         state: absent
     
     - name: run the image
-      docker_container:
+      community.docker.docker_container:
         name: skillbox-app
         image: "{{docker_hub}}/skillbox:{{image_tag}}"
         state: started

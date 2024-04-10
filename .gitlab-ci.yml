@@ -27,41 +27,17 @@ test:
   script:
     - sh run-tests.sh   
 
-#deploy:      
-#  stage: deploy  
-#  only:
-#    - main
-#    - uat    
-  #image: warspoon3000/ansible_image:latest
-#  image: mullnerz/ansible-playbook:2.9.1
-#  before_script:
-#    - ansible --version
-#    - mkdir secret
-#    - echo "$ANSIBLE_SSHKEY" > secret/ansible.key
-#    - chmod 400 secret/ansible.key
-#    - export ANSIBLE_HOST_KEY_CHECKING=False     
-  #  - docker login -u ${DOCKER_HUB} -p ${ACCESS_TOKEN}
-  #  - docker pull ${DOCKER_HUB}/skillbox:${CI_COMMIT_SHORT_SHA} 
-#    - export name_image="${DOCKER_HUB}/skillbox:${CI_COMMIT_SHORT_SHA}"    
-#    - chmod -v 700 ansible     
-#  script:    
-#    - docker pull registry.ci.warspoon.ru/root/test:${CI_COMMIT_SHORT_SHA}           
-#    - ansible-playbook -b --private-key secret/ansible.key --user ubuntu -i ./ansible/hosts ./ansible/docker_playbook.yml
-
 deploy:      
   stage: deploy 
-  image: debian:10 
+  image: warspoon3000/ansible_image:latest 
   only:
-    - main
-    - uat    
-  before_script:
-    - apt-get update && apt-get install -y openssh-client ansible  
+  #  - main
+    - uat      
   script:  
     - eval $(ssh-agent -s)
     - echo "$ANSIBLE_SSHKEY" | tr -d '\r'  > /tmp/id_rsa
     - chmod 600 /tmp/id_rsa
     - ssh-add /tmp/id_rsa
     - mkdir -p $HOME/.ssh
-    - ssh-keyscan -H $HOST >> $HOME/.ssh/known_hosts
-    #- ssh -o StrictHostKeyChecking=no -i /tmp/id_rsa ubuntu@$HOST
+    - ssh-keyscan -H $HOST >> $HOME/.ssh/known_hosts        
     - ansible-playbook -b --private-key /tmp/id_rsa --user ubuntu -i ./ansible/hosts ./ansible/docker_playbook.yml -e "docker_hub=${DOCKER_HUB} image_tag=${CI_COMMIT_SHORT_SHA} password=${ACCESS_TOKEN}" -vv
