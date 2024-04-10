@@ -1,15 +1,29 @@
 ---
-- hosts: 127.0.0.1  
+- hosts: servers
+  remote_user: ubuntu  
 
   vars:
     docker_hub: hub
-    image_tag: tag
+    image_tag: tag    
+    password: password
 
   tasks:
+    - name: Docker login
+      docker_login:
+        registry_url: "{{docker_hub}}"
+        username: "{{username}}"
+        password: "{{password}}"
+
     - name: Pull an image
-      community.docker.docker_image:
+      docker_image:
         name: "{{docker_hub}}/skillbox:{{image_tag}}"
         source: pull
+
+    - name: Docker unlogin
+      docker_login:        
+        username: "{{docker_hub}}"
+        password: "{{password}}"
+        state: absent
     
     - name: run the image
       docker_container:

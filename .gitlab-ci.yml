@@ -64,4 +64,4 @@ deploy:
     - mkdir -p $HOME/.ssh
     - ssh-keyscan -H $HOST
     #- ssh -o StrictHostKeyChecking=no -i /tmp/id_rsa ubuntu@$HOST
-    - ansible-playbook -b --private-key /tmp/id_rsa --user ubuntu ./ansible/docker_playbook.yml -e "docker_hub=${DOCKER_HUB} image_tag=${CI_COMMIT_SHORT_SHA}" -vv
+    - ansible-playbook -b --private-key /tmp/id_rsa --user ubuntu -i ./ansible/hosts ./ansible/docker_playbook.yml -e "docker_hub=${DOCKER_HUB} image_tag=${CI_COMMIT_SHORT_SHA} password=${ACCESS_TOKEN}" -vv
