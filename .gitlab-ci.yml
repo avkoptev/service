@@ -8,17 +8,14 @@ default:
     services:
       - docker:24.0.5-dind
 
-variables:
-  DOCKER_TLS_CERTDIR: "/certs"
-
 build:
   stage: build
   before_script:
-#    - docker login registry.ci.warspoon.ru -u Deployer -p ${ACCESS_TOKEN}  
+#   - docker login registry.ci.warspoon.ru -u Deployer -p ${ACCESS_TOKEN}  
     - docker login -u ${DOCKER_HUB} -p ${ACCESS_TOKEN} 
   script:
-#    - docker build -t registry.ci.warspoon.ru/root/test:${CI_COMMIT_SHORT_SHA} .
-#    - docker push registry.ci.warspoon.ru/root/test:${CI_COMMIT_SHORT_SHA}    
+#   - docker build -t registry.ci.warspoon.ru/root/test:${CI_COMMIT_SHORT_SHA} .
+#   - docker push registry.ci.warspoon.ru/root/test:${CI_COMMIT_SHORT_SHA}    
     - docker build -t ${DOCKER_HUB}/skillbox:${CI_COMMIT_SHORT_SHA} .
     - docker push ${DOCKER_HUB}/skillbox:${CI_COMMIT_SHORT_SHA}
 
@@ -31,7 +28,7 @@ deploy:
   stage: deploy 
   image: warspoon3000/ansible_image:latest 
   only:
-  #  - main
+#   - main
     - uat      
   script:  
     - eval $(ssh-agent -s)
