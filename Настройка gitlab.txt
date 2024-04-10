@@ -35,4 +35,9 @@ Value: {пароль от него}
 Flags: Protect variable и Expand variable reference
 Нажимаем кнопку Add variable
 
+Key: HOST
+Value: {адрес тестового сервера}
+Flags: Expand variable reference
+Нажимаем кнопку Add variable
+
 6. Обновляем файл ansible/hosts под актуальные адреса
