@@ -10,9 +10,8 @@
   tasks:
     - name: Docker login
       docker_login:
-        registry_url: "{{docker_hub}}"
-        username: "{{username}}"
-        password: "{{password}}"
+        username: "{{docker_hub}}"
+        password: "{{password}}"        
 
     - name: Pull an image
       docker_image:
@@ -31,3 +30,13 @@
         image: "{{docker_hub}}/skillbox:{{image_tag}}"
         state: started
         ports: 8080:8080   
+
+    - name: copy unit
+      ansible.builtin.copy:
+        src: ./file/start-docker.service
+        dest: /etc/systemd/system/start-docker.service
+
+    - name: Enabled service
+      ansible.builtin.service:
+        name: start-docker
+        enabled: yes
