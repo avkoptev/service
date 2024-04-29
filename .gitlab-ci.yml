@@ -24,7 +24,7 @@ test:
   script:
     - sh run-tests.sh   
 
-deploy:      
+deploy stage:      
   stage: deploy 
   image: warspoon3000/ansible_image:latest 
   only:
@@ -36,5 +36,26 @@ deploy:
     - chmod 600 /tmp/id_rsa
     - ssh-add /tmp/id_rsa
     - mkdir -p $HOME/.ssh
-    - ssh-keyscan -H $HOST >> $HOME/.ssh/known_hosts        
-    - ansible-playbook -b --private-key /tmp/id_rsa --user ubuntu -i ./ansible/hosts ./ansible/docker_playbook.yml -e "docker_hub=${DOCKER_HUB} image_tag=${CI_COMMIT_SHORT_SHA} password=${ACCESS_TOKEN}" -vv
+    - ssh-keyscan -H $STAGE >> $HOME/.ssh/known_hosts        
+    - ansible-playbook -b --private-key /tmp/id_rsa --user ubuntu\
+      -i ./ansible/inventory/stage\
+      ./ansible/docker_playbook.yml\
+      -e "docker_hub=${DOCKER_HUB} image_tag=${CI_COMMIT_SHORT_SHA} password=${ACCESS_TOKEN} port="8080:8080"" -vv
+
+deploy prod:      
+  stage: deploy 
+  image: warspoon3000/ansible_image:latest 
+  only:
+    - main     
+  script:  
+    - eval $(ssh-agent -s)
+    - echo "$ANSIBLE_SSHKEY" | tr -d '\r'  > /tmp/id_rsa
+    - chmod 600 /tmp/id_rsa
+    - ssh-add /tmp/id_rsa
+    - mkdir -p $HOME/.ssh
+    - ssh-keyscan -H $PROD >> $HOME/.ssh/known_hosts        
+    - ansible-playbook -b --private-key /tmp/id_rsa --user ubuntu\
+      -i ./ansible/inventory/prod\
+      ./ansible/docker_playbook.yml\
+      -e "docker_hub=${DOCKER_HUB} image_tag=${CI_COMMIT_SHORT_SHA} password=${ACCESS_TOKEN}port="80:80"" -vv
+  when: manual 

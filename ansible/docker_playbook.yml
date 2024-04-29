@@ -6,6 +6,7 @@
     docker_hub: hub
     image_tag: tag    
     password: password
+    port: port
 
   tasks:
     - name: Docker login
@@ -29,7 +30,7 @@
         name: skillbox-app
         image: "{{docker_hub}}/skillbox:{{image_tag}}"
         state: started
-        ports: 8080:8080   
+        ports: "{{port}}"   
 
     - name: copy unit
       ansible.builtin.copy:
