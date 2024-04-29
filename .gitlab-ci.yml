@@ -37,10 +37,7 @@ deploy stage:
     - ssh-add /tmp/id_rsa
     - mkdir -p $HOME/.ssh
     - ssh-keyscan -H $STAGE >> $HOME/.ssh/known_hosts        
-    - ansible-playbook -b --private-key /tmp/id_rsa --user ubuntu\
-      -i ./ansible/inventory/stage\
-      ./ansible/docker_playbook.yml\
-      -e "docker_hub=${DOCKER_HUB} image_tag=${CI_COMMIT_SHORT_SHA} password=${ACCESS_TOKEN} port="8080:8080"" -vv
+    - ansible-playbook -b --private-key /tmp/id_rsa --user ubuntu -i ./ansible/inventory/stage ./ansible/docker_playbook.yml -e "docker_hub=${DOCKER_HUB} image_tag=${CI_COMMIT_SHORT_SHA} password=${ACCESS_TOKEN} port="8080:8080"" -vv
 
 deploy prod:      
   stage: deploy 
@@ -54,8 +51,5 @@ deploy prod:
     - ssh-add /tmp/id_rsa
     - mkdir -p $HOME/.ssh
     - ssh-keyscan -H $PROD >> $HOME/.ssh/known_hosts        
-    - ansible-playbook -b --private-key /tmp/id_rsa --user ubuntu\
-      -i ./ansible/inventory/prod\
-      ./ansible/docker_playbook.yml\
-      -e "docker_hub=${DOCKER_HUB} image_tag=${CI_COMMIT_SHORT_SHA} password=${ACCESS_TOKEN}port="80:80"" -vv
+    - ansible-playbook -b --private-key /tmp/id_rsa --user ubuntu -i ./ansible/inventory/prod ./ansible/docker_playbook.yml -e "docker_hub=${DOCKER_HUB} image_tag=${CI_COMMIT_SHORT_SHA} password=${ACCESS_TOKEN} port="80:80"" -vv
   when: manual 

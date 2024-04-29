@@ -1,5 +1,5 @@
 ---
-- hosts: servers
+- hosts: all
   remote_user: ubuntu  
 
   vars:
