@@ -35,8 +35,13 @@ Value: {пароль от него}
 Flags: Protect variable и Expand variable reference
 Нажимаем кнопку Add variable
 
-Key: HOST
+Key: STAGE
 Value: {адрес тестового сервера}
+Flags: Expand variable reference
+Нажимаем кнопку Add variable
+
+Key: PROD
+Value: {адрес продакт сервера}
 Flags: Expand variable reference
 Нажимаем кнопку Add variable
 
